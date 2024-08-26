@@ -8,15 +8,26 @@ docker images
 4. postgres
 
 docker exec -it postgres /bin/bash -> To enter any docker container
+there is a financial_db in postgres container
+inside financial_db there is a table of transactions 
+to check the values which are put inside this table using python script 
+use SELECT * FROM transactions ;
 
+create a postgres connector in debezium and give out the details of topic prefix and all the other values
+
+to see if we can update the transactions table we can use command
+UPDATE transactions set amount = amount + 100 WHERE transaction_id = 'transaction id';
+you will receive output = UPDATE 1
+
+ALTER TABLE transactions REPLICA IDENTITY FULL ; (to check the before and after values if we update any coloumns)
 
 curl -H 'Content-Type: application/json' -X PUT localhost:8083/connectors/postgres-fin-connector/config --data '{
   "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
   "topic.prefix": "cdc",
-  "decimal.handling.mode": "string",
+  "decimal.handling.mode": "double",
   "database.user": "postgres",
   "database.dbname": "financial_db",
   "database.hostname": "postgres",
-  "database.password": "postgres",
+  "database.password": "******",
   "plugin.name": "pgoutput"
-}' --> To add any data field into database in debezium
+}' --> To add any data field into database in debezium (Go into debezium docker container and run this command)
