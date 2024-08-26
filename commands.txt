@@ -31,3 +31,20 @@ curl -H 'Content-Type: application/json' -X PUT localhost:8083/connectors/postgr
   "database.password": "******",
   "plugin.name": "pgoutput"
 }' --> To add any data field into database in debezium (Go into debezium docker container and run this command)
+
+
+financial_db=# ALTER TABLE transactions add column modified_by TEXT ;
+ALTER TABLE
+financial_db=# ALTER TABLE transactions add column modified_at TIMESTAMP ;
+ALTER TABLE
+
+Add two new coloumns to check whenever there modification made in transactions we can know who did it and when did it
+
+CREATE OR REPLACE FUNCTION record_change_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.modified_by := current_user;
+    NEW.modified_at := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
