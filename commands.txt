@@ -1,0 +1,22 @@
+docker ps
+docker compose up -d
+docker compose down
+docker images
+1. zookeeper
+2. kafka broker
+3. debezium
+4. postgres
+
+docker exec -it postgres /bin/bash -> To enter any docker container
+
+
+curl -H 'Content-Type: application/json' -X PUT localhost:8083/connectors/postgres-fin-connector/config --data '{
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "topic.prefix": "cdc",
+  "decimal.handling.mode": "string",
+  "database.user": "postgres",
+  "database.dbname": "financial_db",
+  "database.hostname": "postgres",
+  "database.password": "postgres",
+  "plugin.name": "pgoutput"
+}' --> To add any data field into database in debezium
